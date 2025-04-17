@@ -1,0 +1,10 @@
+./src/opslevel
+src/dist
+.idea
+.DS_Store
+go.work*
+**coverage.txt
+src/*.yaml
+.vscode/
+src/cli
+src/opslevel-mcp
