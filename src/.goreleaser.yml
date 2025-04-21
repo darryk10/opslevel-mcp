@@ -1,0 +1,101 @@
+version: 2
+project_name: opslevel-mcp
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - env:
+      - CGO_ENABLED=0
+    mod_timestamp: '{{ .CommitTimestamp }}'
+    flags:
+      - -trimpath
+    goos:
+      - windows
+      - linux
+      - darwin
+      - freebsd
+      - openbsd
+    goarch:
+      - amd64
+      - '386'
+      - arm
+      - arm64
+    ignore:
+      - goos: darwin
+        goarch: '386'
+    binary: '{{ .ProjectName }}'
+dockers:
+  -
+    dockerfile: Dockerfile
+    use: buildx
+    image_templates:
+    - "public.ecr.aws/opslevel/mcp:{{ .Tag }}-amd64"
+    build_flag_templates:
+    - "--label=org.opencontainers.image.created={{ .Date }}"
+    - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
+    - "--label=org.opencontainers.image.version={{ .Tag }}"
+    - "--build-arg=VERSION={{ .Tag }}"
+    - "--platform=linux/amd64"
+    goos: linux
+    goarch: amd64
+  -
+    dockerfile: Dockerfile
+    use: buildx
+    image_templates:
+    - "public.ecr.aws/opslevel/mcp:{{ .Tag }}-arm64"
+    build_flag_templates:
+    - "--label=org.opencontainers.image.created={{ .Date }}"
+    - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
+    - "--label=org.opencontainers.image.version={{ .Tag }}"
+    - "--build-arg=VERSION={{ .Tag }}"
+    - "--platform=linux/arm64"
+    goos: linux
+    goarch: arm64
+docker_manifests:
+  - name_template: "public.ecr.aws/opslevel/mcp:latest"
+    image_templates:
+      - "public.ecr.aws/opslevel/mcp:{{ .Tag }}-amd64"
+      - "public.ecr.aws/opslevel/mcp:{{ .Tag }}-arm64"
+  - name_template: "public.ecr.aws/opslevel/mcp:{{ .Tag }}"
+    image_templates:
+      - "public.ecr.aws/opslevel/mcp:{{ .Tag }}-amd64"
+      - "public.ecr.aws/opslevel/mcp:{{ .Tag }}-arm64"
+archives:
+  - name_template: '{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}'
+    format_overrides:
+      - goos: windows
+        formats: zip
+brews:
+  - name: opslevel-mcp
+    homepage: "https://www.opslevel.com/"
+    description: "Opslevel MCP Server"
+    license: "MIT"
+    directory: Formula
+    dependencies:
+      - name: jq
+    install: |
+      bin.install "opslevel-mcp"
+    test: |
+      system "#{bin}/opslevel-mcp version"
+    repository:
+      owner: opslevel
+      name: homebrew-tap
+      token: "{{ .Env.ORG_GITHUB_TOKEN }}"
+checksum:
+  name_template: '{{ .ProjectName }}.sha256'
+  algorithm: sha256
+signs:
+  - artifacts: checksum
+    args:
+      - "--batch"
+      - "--local-user"
+      - "{{ .Env.GPG_FINGERPRINT }}"
+      - "--output"
+      - "${signature}"
+      - "--detach-sign"
+      - "${artifact}"
+changelog:
+  sort: desc
+  filters:
+    exclude:
+      - "^Merge"
