@@ -42,9 +42,10 @@ jobs:
             ${{ runner.os }}-go-
       - name: Run quality checks and test code
         run: task ci
-      - name: Upload Coverage
-        uses: codecov/codecov-action@v5
-        with:
-          files: ./src/coverage.txt
-          fail_ci_if_error: false
-          verbose: true
+# Repo is not public yet so we cannot use this
+#      - name: Upload Coverage
+#        uses: codecov/codecov-action@v5
+#        with:
+#          files: ./src/coverage.txt
+#          fail_ci_if_error: false
+#          verbose: true
