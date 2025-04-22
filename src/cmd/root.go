@@ -174,7 +174,7 @@ var rootCmd = &cobra.Command{
 			mcp.NewTool(
 				"resourceDetails",
 				mcp.WithDescription(fmt.Sprintf("Get details for a single resource (%s) in an OpsLevel account using its ID or alias.", strings.Join(opslevel.AllAliasOwnerTypeEnum, ","))),
-				mcp.WithString("resourceType", mcp.Required(), mcp.Description("The type of the resource."), mcp.Enum("service", "infrastructure_resource", "team", "system", "domain")),
+				mcp.WithString("resourceType", mcp.Required(), mcp.Description("The type of the resource."), mcp.Enum(opslevel.AllAliasOwnerTypeEnum...)),
 				mcp.WithString("identifier", mcp.Required(), mcp.Description("The ID or alias of the resource.")),
 			),
 			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
