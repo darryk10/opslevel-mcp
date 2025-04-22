@@ -29,6 +29,15 @@ type LightweightInfrastructureResource struct {
 	ProviderType string   `json:"providerType"`
 }
 
+// NewToolResult creates a CallToolResult for the passed object handling any json marshaling errors
+func NewToolResult(obj any) (*mcp.CallToolResult, error) {
+	data, err := json.Marshal(obj)
+	if err != nil {
+		return nil, err
+	}
+	return mcp.NewToolResultText(string(data)), nil
+}
+
 var mcpCmd = &cobra.Command{
 	Use:   "run",
 	Short: "Runs MCP Server",
@@ -53,11 +62,7 @@ var mcpCmd = &cobra.Command{
 				if err != nil {
 					return nil, err
 				}
-				data, err := json.Marshal(resp.Nodes)
-				if err != nil {
-					return nil, err
-				}
-				return mcp.NewToolResultText(string(data)), nil
+				return NewToolResult(resp.Nodes)
 			})
 
 		// Register Users
@@ -68,11 +73,7 @@ var mcpCmd = &cobra.Command{
 				if err != nil {
 					return nil, err
 				}
-				data, err := json.Marshal(resp.Nodes)
-				if err != nil {
-					return nil, err
-				}
-				return mcp.NewToolResultText(string(data)), nil
+				return NewToolResult(resp.Nodes)
 			})
 
 		// Register Actions
@@ -83,11 +84,7 @@ var mcpCmd = &cobra.Command{
 				if err != nil {
 					return nil, err
 				}
-				data, err := json.Marshal(resp.Nodes)
-				if err != nil {
-					return nil, err
-				}
-				return mcp.NewToolResultText(string(data)), nil
+				return NewToolResult(resp.Nodes)
 			})
 
 		// Register Filters
@@ -98,11 +95,7 @@ var mcpCmd = &cobra.Command{
 				if err != nil {
 					return nil, err
 				}
-				data, err := json.Marshal(resp.Nodes)
-				if err != nil {
-					return nil, err
-				}
-				return mcp.NewToolResultText(string(data)), nil
+				return NewToolResult(resp.Nodes)
 			})
 
 		// Register Components
@@ -122,11 +115,7 @@ var mcpCmd = &cobra.Command{
 						URL:   node.HtmlURL,
 					})
 				}
-				data, err := json.Marshal(components)
-				if err != nil {
-					return nil, err
-				}
-				return mcp.NewToolResultText(string(data)), nil
+				return NewToolResult(components)
 			})
 
 		// Register Infra
@@ -148,11 +137,7 @@ var mcpCmd = &cobra.Command{
 						ProviderType: node.ProviderType,
 					})
 				}
-				data, err := json.Marshal(infrastructureResources)
-				if err != nil {
-					return nil, err
-				}
-				return mcp.NewToolResultText(string(data)), nil
+				return NewToolResult(infrastructureResources)
 			})
 
 		// Register Domains
@@ -163,11 +148,7 @@ var mcpCmd = &cobra.Command{
 				if err != nil {
 					return nil, err
 				}
-				data, err := json.Marshal(resp.Nodes)
-				if err != nil {
-					return nil, err
-				}
-				return mcp.NewToolResultText(string(data)), nil
+				return NewToolResult(resp.Nodes)
 			})
 
 		// Register Systems
@@ -178,11 +159,7 @@ var mcpCmd = &cobra.Command{
 				if err != nil {
 					return nil, err
 				}
-				data, err := json.Marshal(resp.Nodes)
-				if err != nil {
-					return nil, err
-				}
-				return mcp.NewToolResultText(string(data)), nil
+				return NewToolResult(resp.Nodes)
 			})
 
 		// Register ability to fetch a single resource by ID or alias
@@ -201,11 +178,7 @@ var mcpCmd = &cobra.Command{
 				if err != nil {
 					return nil, err
 				}
-				data, err := json.Marshal(resp)
-				if err != nil {
-					return nil, err
-				}
-				return mcp.NewToolResultText(string(data)), nil
+				return NewToolResult(resp)
 			})
 
 		log.Info().Msg("Starting MCP server...")
