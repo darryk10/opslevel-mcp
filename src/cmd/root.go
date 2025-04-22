@@ -50,8 +50,6 @@ var rootCmd = &cobra.Command{
 	Long:  `Opslevel MCP Server`,
 
 	RunE: func(cmd *cobra.Command, args []string) error {
-		done := make(chan struct{})
-
 		s := server.NewMCPServer(
 			"OpsLevel",
 			version,
@@ -189,9 +187,12 @@ var rootCmd = &cobra.Command{
 
 		log.Info().Msg("Starting MCP server...")
 		if err := server.ServeStdio(s); err != nil {
-			panic(err)
+			if err == context.Canceled {
+				log.Info().Msg("MCP server stdio connection closed.")
+			} else {
+				log.Error().Err(err).Msg("MCP server error")
+			}
 		}
-		<-done
 
 		return nil
 	},
