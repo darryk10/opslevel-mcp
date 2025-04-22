@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 	"strings"
 
@@ -172,7 +173,7 @@ var rootCmd = &cobra.Command{
 		s.AddTool(
 			mcp.NewTool(
 				"resourceDetails",
-				mcp.WithDescription("Get details for a single resource in an OpsLevel account using its ID or alias."),
+				mcp.WithDescription(fmt.Sprintf("Get details for a single resource (%s) in an OpsLevel account using its ID or alias.", strings.Join(opslevel.AllAliasOwnerTypeEnum, ","))),
 				mcp.WithString("resourceType", mcp.Required(), mcp.Description("The type of the resource."), mcp.Enum("service", "infrastructure_resource", "team", "system", "domain")),
 				mcp.WithString("identifier", mcp.Required(), mcp.Description("The ID or alias of the resource.")),
 			),
