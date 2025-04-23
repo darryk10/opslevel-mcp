@@ -17,26 +17,27 @@ import (
 	"github.com/spf13/viper"
 )
 
-type NullArguments struct{}
-
-type LightweightComponent struct {
-	Id    string `json:"id"`
-	Name  string `json:"name"`
-	Owner string `json:"owner"`
-	URL   string `json:"url"`
+type serializedComponent struct {
+	id    string
+	name  string
+	owner string
+	url   string
 }
 
-type LightweightInfrastructureResource struct {
-	Id           string   `json:"id"`
-	Name         string   `json:"name"`
-	Owner        string   `json:"owner"`
-	Aliases      []string `json:"aliases"`
-	Schema       string   `json:"schema"`
-	ProviderType string   `json:"providerType"`
+type serializedInfrastructureResource struct {
+	id           string
+	name         string
+	owner        string
+	aliases      []string
+	schema       string
+	providerType string
 }
 
-// NewToolResult creates a CallToolResult for the passed object handling any json marshaling errors
-func NewToolResult(obj any) (*mcp.CallToolResult, error) {
+// newToolResult creates a CallToolResult for the passed object handling any json marshaling errors
+func newToolResult(obj any, err error) (*mcp.CallToolResult, error) {
+	if err != nil {
+		return nil, err
+	}
 	data, err := json.Marshal(obj)
 	if err != nil {
 		return nil, err
@@ -63,10 +64,7 @@ var rootCmd = &cobra.Command{
 				mcp.WithDescription("Get all the team names, identifiers and metadata for the opslevel account.  Teams are owners of other objects in opslevel. Only use this if you need to search all teams.")),
 			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 				resp, err := client.ListTeams(nil)
-				if err != nil {
-					return nil, err
-				}
-				return NewToolResult(resp.Nodes)
+				return newToolResult(resp.Nodes, err)
 			})
 
 		// Register Users
@@ -74,10 +72,7 @@ var rootCmd = &cobra.Command{
 			mcp.NewTool("users", mcp.WithDescription("Get all the user names, e-mail addresses and metadata for the opslevel account.  Users are the people in opslevel. Only use this if you need to search all users.")),
 			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 				resp, err := client.ListUsers(nil)
-				if err != nil {
-					return nil, err
-				}
-				return NewToolResult(resp.Nodes)
+				return newToolResult(resp.Nodes, err)
 			})
 
 		// Register Actions
@@ -85,10 +80,7 @@ var rootCmd = &cobra.Command{
 			mcp.NewTool("actions", mcp.WithDescription("Get all the information about actions the user can run in the opslevel account")),
 			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 				resp, err := client.ListTriggerDefinitions(nil)
-				if err != nil {
-					return nil, err
-				}
-				return NewToolResult(resp.Nodes)
+				return newToolResult(resp.Nodes, err)
 			})
 
 		// Register Filters
@@ -96,10 +88,7 @@ var rootCmd = &cobra.Command{
 			mcp.NewTool("filters", mcp.WithDescription("Get all the rubric filter names and which predicates they have for the opslevel account")),
 			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 				resp, err := client.ListFilters(nil)
-				if err != nil {
-					return nil, err
-				}
-				return NewToolResult(resp.Nodes)
+				return newToolResult(resp.Nodes, err)
 			})
 
 		// Register Components
@@ -110,16 +99,16 @@ var rootCmd = &cobra.Command{
 				if err != nil {
 					return nil, err
 				}
-				var components []LightweightComponent
+				var components []serializedComponent
 				for _, node := range resp.Nodes {
-					components = append(components, LightweightComponent{
-						Id:    string(node.Id),
-						Name:  node.Name,
-						Owner: node.Owner.Alias,
-						URL:   node.HtmlURL,
+					components = append(components, serializedComponent{
+						id:    string(node.Id),
+						name:  node.Name,
+						owner: node.Owner.Alias,
+						url:   node.HtmlURL,
 					})
 				}
-				return NewToolResult(components)
+				return newToolResult(components, nil)
 			})
 
 		// Register Infra
@@ -130,18 +119,18 @@ var rootCmd = &cobra.Command{
 				if err != nil {
 					return nil, err
 				}
-				var infrastructureResources []LightweightInfrastructureResource
+				var infrastructureResources []serializedInfrastructureResource
 				for _, node := range resp.Nodes {
-					infrastructureResources = append(infrastructureResources, LightweightInfrastructureResource{
-						Id:           string(node.Id),
-						Name:         node.Name,
-						Owner:        node.Owner.Alias(),
-						Aliases:      node.Aliases,
-						Schema:       node.Schema,
-						ProviderType: node.ProviderType,
+					infrastructureResources = append(infrastructureResources, serializedInfrastructureResource{
+						id:           string(node.Id),
+						name:         node.Name,
+						owner:        node.Owner.Alias(),
+						aliases:      node.Aliases,
+						schema:       node.Schema,
+						providerType: node.ProviderType,
 					})
 				}
-				return NewToolResult(infrastructureResources)
+				return newToolResult(infrastructureResources, nil)
 			})
 
 		// Register Domains
@@ -149,10 +138,7 @@ var rootCmd = &cobra.Command{
 			mcp.NewTool("domains", mcp.WithDescription("Get all the domains in the opslevel account.  Domains are objects in opslevel that represent a top-level abstraction used to organize and categorize software systems.")),
 			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 				resp, err := client.ListDomains(nil)
-				if err != nil {
-					return nil, err
-				}
-				return NewToolResult(resp.Nodes)
+				return newToolResult(resp.Nodes, err)
 			})
 
 		// Register Systems
@@ -160,10 +146,7 @@ var rootCmd = &cobra.Command{
 			mcp.NewTool("systems", mcp.WithDescription("Get all the systems in the opslevel account.  Systems are objects in opslevel that represent a grouping of services or components that act together to serve a business function or process.")),
 			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 				resp, err := client.ListSystems(nil)
-				if err != nil {
-					return nil, err
-				}
-				return NewToolResult(resp.Nodes)
+				return newToolResult(resp.Nodes, err)
 			})
 
 		// Register ability to fetch a single resource by ID or alias
@@ -179,10 +162,7 @@ var rootCmd = &cobra.Command{
 				identifier := req.Params.Arguments["identifier"].(string)
 				resourceType := opslevel.AliasOwnerTypeEnum(resourceTypeString)
 				resp, err := client.GetAliasableResource(resourceType, identifier)
-				if err != nil {
-					return nil, err
-				}
-				return NewToolResult(resp)
+				return newToolResult(resp, err)
 			})
 
 		log.Info().Msg("Starting MCP server...")
