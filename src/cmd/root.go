@@ -19,19 +19,19 @@ import (
 )
 
 type serializedComponent struct {
-	id    string
-	name  string
-	owner string
-	url   string
+	Id    string
+	Name  string
+	Owner string
+	Url   string
 }
 
 type serializedInfrastructureResource struct {
-	id           string
-	name         string
-	owner        string
-	aliases      []string
-	schema       string
-	providerType string
+	Id           string
+	Name         string
+	Owner        string
+	Aliases      []string
+	Schema       string
+	ProviderType string
 }
 
 // newToolResult creates a CallToolResult for the passed object handling any json marshaling errors
@@ -103,10 +103,10 @@ var rootCmd = &cobra.Command{
 				var components []serializedComponent
 				for _, node := range resp.Nodes {
 					components = append(components, serializedComponent{
-						id:    string(node.Id),
-						name:  node.Name,
-						owner: node.Owner.Alias,
-						url:   node.HtmlURL,
+						Id:    string(node.Id),
+						Name:  node.Name,
+						Owner: node.Owner.Alias,
+						Url:   node.HtmlURL,
 					})
 				}
 				return newToolResult(components, nil)
@@ -123,12 +123,12 @@ var rootCmd = &cobra.Command{
 				var infrastructureResources []serializedInfrastructureResource
 				for _, node := range resp.Nodes {
 					infrastructureResources = append(infrastructureResources, serializedInfrastructureResource{
-						id:           string(node.Id),
-						name:         node.Name,
-						owner:        node.Owner.Alias(),
-						aliases:      node.Aliases,
-						schema:       node.Schema,
-						providerType: node.ProviderType,
+						Id:           string(node.Id),
+						Name:         node.Name,
+						Owner:        node.Owner.Alias(),
+						Aliases:      node.Aliases,
+						Schema:       node.Schema,
+						ProviderType: node.ProviderType,
 					})
 				}
 				return newToolResult(infrastructureResources, nil)
