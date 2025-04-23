@@ -1,0 +1,15 @@
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required:
+      - opslevelApiToken
+    properties:
+      opslevelApiToken:
+        type: string
+        description: OpsLevel API token
+  commandFunction: |
+    (config) => ({
+      command: 'opslevel-mcp',
+      env: { OPSLEVEL_API_TOKEN: config.opslevelApiToken }
+    })
