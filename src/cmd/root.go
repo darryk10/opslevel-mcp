@@ -165,6 +165,34 @@ var rootCmd = &cobra.Command{
 				return newToolResult(resp, err)
 			})
 
+		// Register ability to list all documents, filtered by search term
+		s.AddTool(
+			mcp.NewTool("listDocuments",
+				mcp.WithDescription("Get all the documents for the opslevel account. Documents are filterable by name"),
+				mcp.WithString("searchTerm", mcp.Description("To filter documents by name.")),
+			),
+			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				variables := opslevel.PayloadVariables{
+					"searchTerm": "JK",
+					"after":      "",
+					"first":      100,
+				}
+				resp, err := client.ListDocuments(&variables)
+				return newToolResult(resp.Nodes, err)
+			})
+
+		// Register ability to get specific document by id
+		s.AddTool(
+			mcp.NewTool("getDocument",
+				mcp.WithDescription("Get documents for the opslevel account, specified by id"),
+				mcp.WithString("id", mcp.Required(), mcp.Description("The id of the document to fetch.")),
+			),
+			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				id := req.Params.Arguments["id"].(string)
+				resp, err := client.GetDocument(opslevel.ID(id))
+				return newToolResult(resp, err)
+			})
+
 		log.Info().Msg("Starting MCP server...")
 		if err := server.ServeStdio(s); err != nil {
 			if err == context.Canceled {
