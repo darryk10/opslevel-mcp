@@ -172,8 +172,12 @@ var rootCmd = &cobra.Command{
 				mcp.WithString("searchTerm", mcp.Description("To filter documents by name.")),
 			),
 			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				searchTerm := ""
+				if req.Params.Arguments["searchTerm"] != nil {
+					searchTerm = req.Params.Arguments["searchTerm"].(string)
+				}
 				variables := opslevel.PayloadVariables{
-					"searchTerm": "JK",
+					"searchTerm": searchTerm,
 					"after":      "",
 					"first":      100,
 				}
