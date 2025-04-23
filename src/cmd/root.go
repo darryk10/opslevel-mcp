@@ -279,9 +279,9 @@ func setupLogging() {
 	}
 }
 
-func getListDocumentPayloadVariables(st string) opslevel.PayloadVariables {
+func getListDocumentPayloadVariables(docNameFilter string) opslevel.PayloadVariables {
 	variables := opslevel.PayloadVariables{
-		"searchTerm": st,
+		"searchTerm": docNameFilter,
 		"after":      "",
 		"first":      100,
 	}
