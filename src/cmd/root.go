@@ -165,7 +165,7 @@ var rootCmd = &cobra.Command{
 				return newToolResult(resp, err)
 			})
 
-		// Register ability to list all documents, filtered by search term
+		// Register all documents, filtered by search term
 		s.AddTool(
 			mcp.NewTool("listDocuments",
 				mcp.WithDescription("Get all the documents for the opslevel account. Documents are filterable by name"),
@@ -176,16 +176,12 @@ var rootCmd = &cobra.Command{
 				if req.Params.Arguments["searchTerm"] != nil {
 					searchTerm = req.Params.Arguments["searchTerm"].(string)
 				}
-				variables := opslevel.PayloadVariables{
-					"searchTerm": searchTerm,
-					"after":      "",
-					"first":      100,
-				}
+				variables := getListDocumentPayloadVariables(searchTerm)
 				resp, err := client.ListDocuments(&variables)
 				return newToolResult(resp.Nodes, err)
 			})
 
-		// Register ability to get specific document by id
+		// Register document by id
 		s.AddTool(
 			mcp.NewTool("getDocument",
 				mcp.WithDescription("Get documents for the opslevel account, specified by id"),
@@ -194,6 +190,28 @@ var rootCmd = &cobra.Command{
 			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 				id := req.Params.Arguments["id"].(string)
 				resp, err := client.GetDocument(opslevel.ID(id))
+				return newToolResult(resp, err)
+			})
+
+		// Register all documents, filtered by service id and search term
+		s.AddTool(
+			mcp.NewTool("getDocumentsOnService",
+				mcp.WithDescription("Get all documents on a specified service for the opslevel account, specified by service id and filtered by search term"),
+				mcp.WithString("serviceId", mcp.Required(), mcp.Description("The id of the service which the documents are on.")),
+				mcp.WithString("searchTerm", mcp.Description("To filter documents by name.")),
+			),
+			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				service := opslevel.Service{
+					ServiceId: opslevel.ServiceId{
+						Id: opslevel.ID(req.Params.Arguments["serviceId"].(string)),
+					},
+				}
+				searchTerm := ""
+				if req.Params.Arguments["searchTerm"] != nil {
+					searchTerm = req.Params.Arguments["searchTerm"].(string)
+				}
+				variables := getListDocumentPayloadVariables(searchTerm)
+				resp, err := service.GetDocuments(client, &variables)
 				return newToolResult(resp, err)
 			})
 
@@ -259,4 +277,14 @@ func setupLogging() {
 	default:
 		zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	}
+}
+
+func getListDocumentPayloadVariables(st string) opslevel.PayloadVariables {
+	variables := opslevel.PayloadVariables{
+		"searchTerm": st,
+		"after":      "",
+		"first":      100,
+	}
+
+	return variables
 }
