@@ -1,4 +1,4 @@
-This MCP ([Model Context Protocol](https://modelcontextprotocol.io/introduction)) server provides AI's with tools to interact with your OpsLevel account.
+This MCP ([Model Context Protocol](https://modelcontextprotocol.io/introduction)) server provides AIs with tools to interact with your OpsLevel account.
 
 ![mcp_image](https://github.com/user-attachments/assets/dd936eef-80c2-42a5-8d04-9ca9c2de8e76)
 
@@ -8,8 +8,8 @@ This MCP ([Model Context Protocol](https://modelcontextprotocol.io/introduction)
    1. Homebrew - `brew install opslevel/tap/opslevel-mcp`
    2. Docker - `docker pull public.ecr.aws/opslevel/mcp:latest`  
       You can also used a pinned version [check out the gallery for the available tags](https://gallery.ecr.aws/opslevel/mcp) 
-   3. Manual - Visit our [Github releases page](https://github.com/OpsLevel/opslevel-mcp/releases) and download the binary for your operating system.
-2. You will need an [API Token](https://app.opslevel.com/api_tokens) to authorize the MCP Server to talk to your account via an environment variable
+   3. Manual - Visit our [GitHub releases page](https://github.com/OpsLevel/opslevel-mcp/releases) and download the binary for your operating system.
+2. You will need an [API Token](https://app.opslevel.com/api_tokens) to authorize the MCP Server to talk to your account via an environment variable.
 3. Setup MCP configuration for the AI tool of your choice.
 
 ## Claude
