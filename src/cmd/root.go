@@ -166,6 +166,56 @@ var rootCmd = &cobra.Command{
 				return newToolResult(resp, err)
 			})
 
+		// Register all documents, filtered by search term
+		s.AddTool(
+			mcp.NewTool("documents",
+				mcp.WithDescription("Get all the documents for the opslevel account. Documents are filterable by search term. Documents could be things like runbooks, integration documentation, api documentation, readme's, or other forms of documentation."),
+				mcp.WithString("searchTerm", mcp.Description("To filter documents with.")),
+			),
+			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				searchTerm := ""
+				if req.Params.Arguments["searchTerm"] != nil {
+					searchTerm = req.Params.Arguments["searchTerm"].(string)
+				}
+				variables := getListDocumentPayloadVariables(searchTerm)
+				resp, err := client.ListDocuments(&variables)
+				return newToolResult(resp.Nodes, err)
+			})
+
+		// Register document by id
+		s.AddTool(
+			mcp.NewTool("document",
+				mcp.WithDescription("Get document contents for the opslevel account, specified by id. Documents could be things like runbooks, integration documentation, api documentation, readme's, or other forms of documentation."),
+				mcp.WithString("id", mcp.Required(), mcp.Description("The id of the document to fetch.")),
+			),
+			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				id := req.Params.Arguments["id"].(string)
+				resp, err := client.GetDocument(opslevel.ID(id))
+				return newToolResult(resp, err)
+			})
+
+		// Register all documents, filtered by service id and search term
+		s.AddTool(
+			mcp.NewTool("documentsOnService",
+				mcp.WithDescription("Get all documents on a specified service for the opslevel account, specified by service id and filtered by search term. Documents could be things like runbooks, integration documentation, api documentation, readme's, or other forms of documentation."),
+				mcp.WithString("serviceId", mcp.Required(), mcp.Description("The id of the service which the documents are on.")),
+				mcp.WithString("searchTerm", mcp.Description("To filter documents with.")),
+			),
+			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				service := opslevel.Service{
+					ServiceId: opslevel.ServiceId{
+						Id: opslevel.ID(req.Params.Arguments["serviceId"].(string)),
+					},
+				}
+				searchTerm := ""
+				if req.Params.Arguments["searchTerm"] != nil {
+					searchTerm = req.Params.Arguments["searchTerm"].(string)
+				}
+				variables := getListDocumentPayloadVariables(searchTerm)
+				resp, err := service.GetDocuments(client, &variables)
+				return newToolResult(resp, err)
+			})
+
 		log.Info().Msg("Starting MCP server...")
 		if err := server.ServeStdio(s); err != nil {
 			if err == context.Canceled {
@@ -227,5 +277,13 @@ func setupLogging() {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	default:
 		zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	}
+}
+
+func getListDocumentPayloadVariables(searchTerm string) opslevel.PayloadVariables {
+	return opslevel.PayloadVariables{
+		"searchTerm": searchTerm,
+		"after":      "",
+		"first":      100,
 	}
 }
