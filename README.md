@@ -1,3 +1,5 @@
+# OpsLevel MCP Server
+
 This MCP ([Model Context Protocol](https://modelcontextprotocol.io/introduction)) server provides AIs with tools to interact with your OpsLevel account.
 
 ![mcp_image](https://github.com/user-attachments/assets/dd936eef-80c2-42a5-8d04-9ca9c2de8e76)
