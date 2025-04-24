@@ -168,8 +168,8 @@ var rootCmd = &cobra.Command{
 		// Register all documents, filtered by search term
 		s.AddTool(
 			mcp.NewTool("listDocuments",
-				mcp.WithDescription("Get all the documents for the opslevel account. Documents are filterable by name"),
-				mcp.WithString("searchTerm", mcp.Description("To filter documents by name.")),
+				mcp.WithDescription("Get all the documents for the opslevel account. Documents are filterable by search term"),
+				mcp.WithString("searchTerm", mcp.Description("To filter documents with.")),
 			),
 			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 				searchTerm := ""
@@ -198,7 +198,7 @@ var rootCmd = &cobra.Command{
 			mcp.NewTool("getDocumentsOnService",
 				mcp.WithDescription("Get all documents on a specified service for the opslevel account, specified by service id and filtered by search term"),
 				mcp.WithString("serviceId", mcp.Required(), mcp.Description("The id of the service which the documents are on.")),
-				mcp.WithString("searchTerm", mcp.Description("To filter documents by name.")),
+				mcp.WithString("searchTerm", mcp.Description("To filter documents with.")),
 			),
 			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 				service := opslevel.Service{
@@ -279,9 +279,9 @@ func setupLogging() {
 	}
 }
 
-func getListDocumentPayloadVariables(docNameFilter string) opslevel.PayloadVariables {
+func getListDocumentPayloadVariables(searchTerm string) opslevel.PayloadVariables {
 	variables := opslevel.PayloadVariables{
-		"searchTerm": docNameFilter,
+		"searchTerm": searchTerm,
 		"after":      "",
 		"first":      100,
 	}
