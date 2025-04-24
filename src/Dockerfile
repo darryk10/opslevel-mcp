@@ -5,4 +5,4 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y ca-certificates jq && \
     apt-get purge && apt-get clean && apt-get autoclean
-COPY opslevel /usr/local/bin
+COPY opslevel-mcp /usr/local/bin
