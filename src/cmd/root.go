@@ -168,15 +168,16 @@ var rootCmd = &cobra.Command{
 		// Register all documents, filtered by search term
 		s.AddTool(
 			mcp.NewTool("documents",
-				mcp.WithDescription("Get all the documents for the opslevel account. Documents are filterable by search term. Documents could be things like runbooks, integration documentation, api documentatin, readmes, or other forms of documentation."),
+				mcp.WithDescription("Get all the documents for the opslevel account. Documents are filterable by search term. Documents could be things like runbooks, integration documentation, api documentation, readme's, or other forms of documentation."),
 				mcp.WithString("searchTerm", mcp.Description("To filter documents with.")),
 			),
 			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 				searchTerm := ""
+				testVal := req.Params.Arguments["searchTerm"]
 				if req.Params.Arguments["searchTerm"] != nil {
 					searchTerm = req.Params.Arguments["searchTerm"].(string)
 				}
-				variables := getListDocumentPayloadVariables(searchTerm)
+				variables := getListDocumentPayloadVariables(testVal)
 				resp, err := client.ListDocuments(&variables)
 				return newToolResult(resp.Nodes, err)
 			})
@@ -184,7 +185,7 @@ var rootCmd = &cobra.Command{
 		// Register document by id
 		s.AddTool(
 			mcp.NewTool("document",
-				mcp.WithDescription("Get document contents for the opslevel account, specified by id. Documents could be things like runbooks, integration documentation, api documentatin, readmes, or other forms of documentation."),
+				mcp.WithDescription("Get document contents for the opslevel account, specified by id. Documents could be things like runbooks, integration documentation, api documentation, readme's, or other forms of documentation."),
 				mcp.WithString("id", mcp.Required(), mcp.Description("The id of the document to fetch.")),
 			),
 			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
@@ -196,7 +197,7 @@ var rootCmd = &cobra.Command{
 		// Register all documents, filtered by service id and search term
 		s.AddTool(
 			mcp.NewTool("documentsOnService",
-				mcp.WithDescription("Get all documents on a specified service for the opslevel account, specified by service id and filtered by search term. Documents could be things like runbooks, integration documentation, api documentatin, readmes, or other forms of documentation."),
+				mcp.WithDescription("Get all documents on a specified service for the opslevel account, specified by service id and filtered by search term. Documents could be things like runbooks, integration documentation, api documentation, readme's, or other forms of documentation."),
 				mcp.WithString("serviceId", mcp.Required(), mcp.Description("The id of the service which the documents are on.")),
 				mcp.WithString("searchTerm", mcp.Description("To filter documents with.")),
 			),
