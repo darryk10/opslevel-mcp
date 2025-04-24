@@ -173,11 +173,10 @@ var rootCmd = &cobra.Command{
 			),
 			func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 				searchTerm := ""
-				testVal := req.Params.Arguments["searchTerm"]
 				if req.Params.Arguments["searchTerm"] != nil {
 					searchTerm = req.Params.Arguments["searchTerm"].(string)
 				}
-				variables := getListDocumentPayloadVariables(testVal)
+				variables := getListDocumentPayloadVariables(searchTerm)
 				resp, err := client.ListDocuments(&variables)
 				return newToolResult(resp.Nodes, err)
 			})
@@ -281,11 +280,9 @@ func setupLogging() {
 }
 
 func getListDocumentPayloadVariables(searchTerm string) opslevel.PayloadVariables {
-	variables := opslevel.PayloadVariables{
+	return opslevel.PayloadVariables{
 		"searchTerm": searchTerm,
 		"after":      "",
 		"first":      100,
 	}
-
-	return variables
 }
