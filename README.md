@@ -1,0 +1,113 @@
+This MCP ([Model Context Protocol](https://modelcontextprotocol.io/introduction)) server provides AI's with tools to interact with your OpsLevel account.
+
+![mcp_image](https://github.com/user-attachments/assets/dd936eef-80c2-42a5-8d04-9ca9c2de8e76)
+
+# Setup
+
+1. Install the MCP Server
+   1. Homebrew - `brew install opslevel/tap/opslevel-mcp`
+   2. Docker - `docker pull public.ecr.aws/opslevel/mcp:latest`  
+      You can also used a pinned version [check out the gallery for the available tags](https://gallery.ecr.aws/opslevel/mcp) 
+   3. Manual - Visit our [Github releases page](https://github.com/OpsLevel/opslevel-mcp/releases) and download the binary for your operating system.
+2. You will need an [API Token](https://app.opslevel.com/api_tokens) to authorize the MCP Server to talk to your account via an environment variable
+3. Setup MCP configuration for the AI tool of your choice.
+
+## Claude
+
+[Claude Desktop](https://modelcontextprotocol.io/quickstart/user)
+
+1. Edit the file at the specified path based on the Claude Desktop docs
+   1. Mac OS - `${HOME}/Library/Application\\ Support/Claude/claude_desktop_config.json`
+   2. Windows - `%APPDATA%\Claude\claude_desktop_config.json`
+2. Start (or restart) Claude Desktop
+
+```json
+{
+    "mcpServers": {
+        "opslevel": {
+            "command": "opslevel-mcp",
+            "env": {
+                "OPSLEVEL_API_TOKEN": "XXXXXXX"
+            }
+        }
+    }
+}
+```
+
+## VS Code
+
+[VS Code User Settings](https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_finding-mcp-servers)
+
+1. Open the Settings menu (Command + Comma) and select the correct tab atop the page for your use case
+   1. Workspace - configures the server in the context of your workspace
+   2. User - configures the server in the context of your user
+2. Select Features → Chat
+3. Ensure that "Mcp" is Enabled
+   1. You may need to have your Github administrator enable "preview" features in the CoPilot settings for the organization.
+4. Click "Edit in settings.json" under "Mcp > Discovery" to have the below config
+   1. Can also edit the file directly
+      1. (Mac OS)  `${HOME}/Library/Application\\ Support/Code/User/settings.json`
+5. Start (or restart) VS Code
+
+```json
+{
+    "chat.agent.enabled": true,
+    "chat.mcp.discovery.enabled": true,
+    "mcp": {
+        "inputs": [
+          {
+            "type": "promptString",
+            "id": "opslevel_token",
+            "description": "OpsLevel API Token",
+            "password": true
+          }
+        ],
+        "servers": {
+            "opslevel": {
+                "type": "stdio",
+                "command": "opslevel-mcp",
+                "env": {
+                    "OPSLEVEL_API_TOKEN": "${input:opslevel_token}"
+                }
+            }
+        }
+    }
+}
+```
+
+## Cursor
+
+[Cursor](https://docs.cursor.com/context/model-context-protocol)
+
+1. Open the Cursor menu and select Settings → Cursor Settings → MCP
+2. Click "Add new global MCP server"
+3. Add the config below
+
+```json
+{
+  "mcpServers": {
+    "opslevel": {
+      "command": "opslevel-mcp",  
+      "env": {
+        "OPSLEVEL_API_TOKEN": "XXXXXX"
+      }
+    }
+  }
+}
+```
+
+### Docker
+
+If you didn't install the binary directly and instead pulled the docker image you'll need to adjust the above MCP configurations to support running the server via docker
+
+```
+        "command": "docker",
+        "args": [
+          "run",
+          "-i",
+          "--rm",
+          "-e",
+          "OPSLEVEL_API_TOKEN",
+          "public.ecr.aws/opslevel/mcp:latest"
+        ],
+```
