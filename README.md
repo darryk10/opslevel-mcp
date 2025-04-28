@@ -37,7 +37,7 @@ This MCP ([Model Context Protocol](https://modelcontextprotocol.io/introduction)
 [Claude Desktop](https://modelcontextprotocol.io/quickstart/user)
 
 1. Edit the file at the specified path based on the Claude Desktop docs
-   1. Mac OS - `${HOME}/Library/Application\\ Support/Claude/claude_desktop_config.json`
+   1. Mac OS - `${HOME}/Library/Application\ Support/Claude/claude_desktop_config.json`
    2. Windows - `%APPDATA%\Claude\claude_desktop_config.json`
 2. Start (or restart) Claude Desktop
 
