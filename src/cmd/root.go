@@ -56,6 +56,11 @@ var rootCmd = &cobra.Command{
 	Long:  `Opslevel MCP Server`,
 
 	RunE: func(cmd *cobra.Command, args []string) error {
+		token := viper.GetString("api-token")
+		if token == "" {
+			return fmt.Errorf("no API token was found, use --api-token=XXX or the OPSLEVEL_API_TOKEN environment variable is required")
+		}
+
 		s := server.NewMCPServer(
 			"OpsLevel",
 			version,
