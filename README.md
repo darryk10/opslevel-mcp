@@ -1,3 +1,21 @@
+<p align="center">
+    <a href="https://github.com/OpsLevel/opslevel-mcp/blob/main/LICENSE">
+        <img src="https://img.shields.io/github/license/OpsLevel/opslevel-mcp.svg" alt="License" /></a>
+    <a href="https://GitHub.com/OpsLevel/opslevel-mcp/releases/">
+        <img src="https://img.shields.io/github/v/release/OpsLevel/opslevel-mcp" alt="Release" /></a>
+    <a href="https://masterminds.github.io/stability/experimental.html">
+        <img src="https://masterminds.github.io/stability/experimental.svg" alt="Stability: Experimental" /></a>
+    <a href="https://github.com/OpsLevel/opslevel-mcp/graphs/contributors">
+        <img src="https://img.shields.io/github/contributors/OpsLevel/opslevel-mcp" alt="Contributors" /></a>
+    <a href="https://github.com/OpsLevel/opslevel-mcp/pulse">
+        <img src="https://img.shields.io/github/commit-activity/m/OpsLevel/opslevel-mcp" alt="Activity" /></a>
+    <a href="https://github.com/OpsLevel/opslevel-mcp/releases">
+        <img src="https://img.shields.io/github/downloads/OpsLevel/opslevel-mcp/total" alt="Downloads" /></a>
+    <a href="https://app.opslevel.com/services/opslevel_mcp/maturity-report">
+        <img src="https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fapp.opslevel.com%2Fapi%2Fservice_level%2Fdlmj6PlFjehv6iLE6IQtEGXi_uz3LF9rA5nxb35wiY8" alt="Overall" /></a>
+</p>
+
+
 # OpsLevel MCP Server
 
 This MCP ([Model Context Protocol](https://modelcontextprotocol.io/introduction)) server provides AIs with tools to interact with your OpsLevel account.
