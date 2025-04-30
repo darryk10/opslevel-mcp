@@ -22,6 +22,21 @@ This MCP ([Model Context Protocol](https://modelcontextprotocol.io/introduction)
 
 ![mcp_image](https://github.com/user-attachments/assets/dd936eef-80c2-42a5-8d04-9ca9c2de8e76)
 
+# Features
+
+Currently the MCP server only uses read-only access to your OpsLevel account and can read data from the following resources:
+
+- Actions
+- Components
+- Documentation (Tech Docs)
+- Domains
+- Filters
+- Infrastructure
+- Repositories
+- Systems
+- Teams
+- Users
+
 # Setup
 
 1. Install the MCP Server
