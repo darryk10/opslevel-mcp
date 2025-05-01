@@ -133,7 +133,7 @@ Currently, the MCP server only uses read-only access to your OpsLevel account an
 
 ## Windsurf
 
-[Windsurf](https://docs.cursor.com/context/model-context-protocol)
+[Windsurf](https://windsurf.com/editor)
 
 1. Navigate to Windsurf - Settings > Advanced Settings
 2. Scroll down to the Cascade section and you will find the option to add a new server
