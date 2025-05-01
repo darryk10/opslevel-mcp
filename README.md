@@ -131,6 +131,28 @@ Currently, the MCP server only uses read-only access to your OpsLevel account an
 }
 ```
 
+## Windsurf
+
+[Windsurf](https://docs.cursor.com/context/model-context-protocol)
+
+1. Navigate to Windsurf - Settings > Advanced Settings
+2. Scroll down to the Cascade section and you will find the option to add a new server
+3. Edit the [mpc_config.json](https://docs.windsurf.com/windsurf/mcp#mcp-config-json) with the below configuration
+4. Restart Windsurf
+
+```json
+{
+  "mcpServers": {
+    "opslevel": {
+      "command": "opslevel-mcp",  
+      "env": {
+        "OPSLEVEL_API_TOKEN": "XXXXXX"
+      }
+    }
+  }
+}
+```
+
 ### Docker
 
 If you didn't install the binary directly and instead pulled the docker image you'll need to adjust the above MCP configurations to support running the server via docker
