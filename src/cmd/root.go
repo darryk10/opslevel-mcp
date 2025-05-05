@@ -181,7 +181,13 @@ var rootCmd = &cobra.Command{
 				identifier := req.Params.Arguments["identifier"].(string)
 				resourceType := opslevel.AliasOwnerTypeEnum(resourceTypeString)
 				resp, err := client.GetAliasableResource(resourceType, identifier)
-				return newToolResult(resp, err)
+				switch v := resp.(type) {
+				case *opslevel.Service:
+					v.Properties, err = v.GetProperties(client, nil)
+					return newToolResult(v, err)
+				default:
+					return newToolResult(resp, err)
+				}
 			})
 
 		// Register all documents, filtered by search term
