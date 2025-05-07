@@ -7,5 +7,11 @@ on:
 
 jobs:
   dependabot-pr-label:
-    if: github.event.label.name == 'dependencies'
-    uses: OpsLevel/actions/.github/workflows/dependabot_pr_labels.yml@main
+    if: >-
+      github.actor == 'dependabot[bot]' &&
+      github.event_name == 'pull_request' &&
+      contains(github.event.pull_request.labels.*.name, inputs.pr_label)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dependabot labeled PR
+        run: echo "Dependabot labeled a PR with label ${{ inputs.pr_label }}"
