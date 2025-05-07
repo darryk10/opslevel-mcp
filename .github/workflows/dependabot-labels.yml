@@ -9,7 +9,7 @@ jobs:
   dependabot-pr-label:
     if: >-
       github.event_name == 'pull_request' &&
-      contains(github.event.pull_request.labels.*.name, inputs.pr_label)
+      contains(github.event.pull_request.labels.*.name, 'dependencies')
     runs-on: ubuntu-latest
     steps:
       - name: Dependabot labeled PR
