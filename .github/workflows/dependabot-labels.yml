@@ -8,7 +8,6 @@ on:
 jobs:
   dependabot-pr-label:
     if: >-
-      github.actor == 'dependabot[bot]' &&
       github.event_name == 'pull_request' &&
       contains(github.event.pull_request.labels.*.name, inputs.pr_label)
     runs-on: ubuntu-latest
